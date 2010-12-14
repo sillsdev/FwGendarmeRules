@@ -1,0 +1,6 @@
+*.sln
+*~
+*.userprefs
+*.pidb
+bin/
+test-results/
