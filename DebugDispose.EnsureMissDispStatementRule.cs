@@ -187,6 +187,10 @@ namespace SIL.Gendarme.Rules.DebugDispose
 			if (!method.HasBody || !method.HasThis)
 				return RuleResult.DoesNotApply;
 
+			// rule only applies to type that implements IDisposable
+			if (!method.DeclaringType.Implements("System.IDisposable"))
+				return RuleResult.DoesNotApply;
+
 			// avoid looping if we're sure there's no call in the method
 			if (!OpCodeBitmask.Calls.Intersect(OpCodeEngine.GetBitmask(method)))
 				return RuleResult.Failure;
@@ -197,6 +201,12 @@ namespace SIL.Gendarme.Rules.DebugDispose
 				if (!HasConditionalAttributeForDebugging(method.CustomAttributes))
 					return RuleResult.Success;
 			}
+
+			var parentType = method.DeclaringType.BaseType;
+			if (parentType.Implements("System.IDisposable") && parentType.FullName != "System.Windows.Forms.Form" &&
+				parentType.FullName != "System.Windows.Forms.Control" &&
+				parentType.FullName != "System.Windows.Forms.UserControl")
+				return RuleResult.DoesNotApply;
 
 			foreach (Instruction ins in method.Body.Instructions)
 			{

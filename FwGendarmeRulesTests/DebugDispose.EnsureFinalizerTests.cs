@@ -15,6 +15,10 @@ using Test.Rules.Helpers;
 
 namespace SIL.Gendarme.Rules.DebugDispose
 {
+	interface Interface: IDisposable
+	{
+	}
+
 	class WithoutDispose
 	{
 		public WithoutDispose() {}
@@ -63,6 +67,15 @@ namespace SIL.Gendarme.Rules.DebugDispose
 		public void ClassWithoutFinalizer()
 		{
 			AssertRuleFailure<WithDisposeNoFinalizer>();
+		}
+
+		/// <summary>
+		/// Tests that the rule does not apply on interfaces
+		/// </summary>
+		[Test]
+		public void DoesntApplyOnInterface()
+		{
+			AssertRuleDoesNotApply<Interface>();
 		}
 	}
 }

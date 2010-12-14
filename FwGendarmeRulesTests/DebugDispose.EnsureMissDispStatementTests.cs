@@ -15,6 +15,12 @@ using Test.Rules.Helpers;
 
 namespace SIL.Gendarme.Rules.DebugDispose
 {
+	class NonDisposable
+	{
+		public void Dispose(bool fDispose)
+		{}
+	}
+
 	abstract class NoBody: IDisposable
 	{
 		public void Dispose()
@@ -104,6 +110,47 @@ namespace SIL.Gendarme.Rules.DebugDispose
 		}
 	}
 
+	class Derived: WithStatement
+	{
+		protected override void Dispose(bool fDisposing)
+		{
+			base.Dispose(fDisposing);
+		}
+	}
+
+	class DerivedDerived : Derived
+	{
+		protected override void Dispose(bool fDisposing)
+		{
+			base.Dispose(fDisposing);
+		}
+	}
+
+	class DerivedControl: System.Windows.Forms.Control
+	{
+		protected override void Dispose(bool release_all)
+		{
+			base.Dispose(release_all);
+		}
+	}
+
+	class A
+	{}
+
+	class DisposableA: A, IDisposable
+	{
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool fDisposing)
+		{
+
+		}
+	}
+
 	[TestFixture]
 	public class EnsureMissDispStatementTests: MethodRuleTestFixture<EnsureMissDispStatementRule>
 	{
@@ -152,7 +199,57 @@ namespace SIL.Gendarme.Rules.DebugDispose
 		[Test]
 		public void DisposeWithNonStandardText()
 		{
-			AssertRuleFailure<NonstandardText>("Dispose", new[] { typeof(bool)});
+			AssertRuleFailure<NonstandardText>("Dispose", new[] { typeof(bool) });
+		}
+
+		/// <summary>
+		/// Tests that in a derived class we don't expect the "Missing Dispose" output because
+		/// that should be done in the base class.
+		/// </summary>
+		[Test]
+		public void DisposeInDerivedClass()
+		{
+			AssertRuleDoesNotApply<Derived>("Dispose", new[] { typeof(bool) });
+		}
+
+		/// <summary>
+		/// Tests that we expect the "Missing Dispose" output in a class that derives directly
+		/// from Control, UserControl or Form.
+		/// </summary>
+		[Test]
+		public void DisposeInDerivedControl()
+		{
+			AssertRuleFailure<DerivedControl>("Dispose", new[] { typeof(bool) });
+		}
+
+		/// <summary>
+		/// Tests that we expect the "Missing Dispose" output in a derived class that implements
+		/// IDisposable whereas the parent class doesn't.
+		/// </summary>
+		[Test]
+		public void DisposeInDerivedClassThatImplementsIDisposable()
+		{
+			AssertRuleFailure<DisposableA>("Dispose", new[] { typeof(bool) });
+		}
+
+		/// <summary>
+		/// Tests that the rule doesn't apply in a class that derives from a class whose ancestor
+		/// class implements IDisposable.
+		/// </summary>
+		[Test]
+		public void DisposeInDoubleDerivedClass()
+		{
+			AssertRuleDoesNotApply<DerivedDerived>("Dispose", new[] { typeof(bool) });
+		}
+
+		/// <summary>
+		/// Tests that the rule doesn't apply in a class that doesn't derive from IDisposable
+		/// and that doesn't have any parent class.
+		/// </summary>
+		[Test]
+		public void NonDisposable()
+		{
+			AssertRuleDoesNotApply<NonDisposable>("Dispose", new[] { typeof(bool) });
 		}
 	}
 }

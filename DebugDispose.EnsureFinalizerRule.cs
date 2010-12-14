@@ -63,7 +63,8 @@ namespace SIL.Gendarme.Rules.DebugDispose
 		public RuleResult CheckType(TypeDefinition type)
 		{
 			// rule applies only to types and interfaces
-			if (type.IsEnum || type.IsDelegate() || type.IsGeneratedCode() || type.IsValueType)
+			if (type.IsEnum || type.IsDelegate() || type.IsGeneratedCode() ||
+				type.IsValueType || type.IsInterface)
 				return RuleResult.DoesNotApply;
 			
 			// rule only applies to type that implements IDisposable
