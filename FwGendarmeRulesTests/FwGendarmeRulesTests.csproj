@@ -51,8 +51,8 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DebugDispose.EnsureFinalizerTests.cs" />
-    <Compile Include="DebugDispose.EnsureMissDispStatementTests.cs" />
+    <Compile Include="EnsureDebugDisposeFinalizerTests.cs" />
+    <Compile Include="EnsureDebugDisposeMissDispStatementTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
