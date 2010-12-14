@@ -218,16 +218,16 @@ namespace SIL.Gendarme.Rules.DebugDispose
 						if (parameters[i].ParameterType.FullName == "System.String")
 						{
 							var output = GetLoadStringInstruction(ins, method, i);
-							if (!string.IsNullOrEmpty(output) && output.ToLower().Contains("missing dispose"))
-								return Runner.CurrentRuleResult;
-							Runner.Report(method, ins, Severity.Medium, Confidence.Normal);
-							break;
+							if (string.IsNullOrEmpty(output) || !output.ToLower().Contains("missing dispose"))
+								Runner.Report(method, ins, Severity.Medium, Confidence.Normal);
+							return Runner.CurrentRuleResult;
 						}
 					}
 				}
 			}
 
 			// Didn't find a WriteLineIf
+			Runner.Report(method, Severity.Medium, Confidence.High);
 			return RuleResult.Failure;
 		}
 		#endregion

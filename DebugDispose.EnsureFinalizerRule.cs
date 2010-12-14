@@ -70,9 +70,11 @@ namespace SIL.Gendarme.Rules.DebugDispose
 			if (!type.Implements("System.IDisposable"))
 				return RuleResult.DoesNotApply;
 			
-			// no problem is a finalizer is found
+			// no problem if a finalizer is found
 			if (type.HasMethod(MethodSignatures.Finalize))
 				return RuleResult.Success;
+
+			Runner.Report(type, Severity.Medium, Confidence.High);
 			return RuleResult.Failure;
 		}
 		#endregion
