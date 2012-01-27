@@ -30,25 +30,20 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="Gendarme.Framework, Version=2.8.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Externals\Gendarme.Framework.dll</HintPath>
-    </Reference>
+    <Reference Include="System" />
     <Reference Include="Mono.Cecil, Version=0.6.9.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="Test.Rules, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Externals\Test.Rules.dll</HintPath>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="Gendarme.Framework">
+      <HintPath>..\Externals\Gendarme.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.5.8.10295, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="nunit.framework">
       <HintPath>..\Externals\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows.Forms" />
+    <Reference Include="Test.Rules">
+      <HintPath>..\Externals\Test.Rules.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnsureDebugDisposeFinalizerTests.cs" />

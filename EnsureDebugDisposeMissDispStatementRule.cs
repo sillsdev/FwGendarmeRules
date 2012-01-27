@@ -11,6 +11,7 @@ using System.Resources;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Mono.Collections.Generic;
 
 using Gendarme.Framework;
 using Gendarme.Framework.Rocks;
@@ -51,7 +52,7 @@ namespace SIL.Gendarme.Rules.DebugDispose
 		private const string Debug = "System.Diagnostics.Debug";
 
 		// note: there can be multiple [Conditional] attribute on a method
-		private static bool HasConditionalAttributeForDebugging(CustomAttributeCollection cac)
+		private static bool HasConditionalAttributeForDebugging(Collection<CustomAttribute> cac)
 		{
 			foreach (CustomAttribute ca in cac)
 			{
@@ -59,7 +60,7 @@ namespace SIL.Gendarme.Rules.DebugDispose
 				{
 					// this should not happen since there's a single ctor accepting a string
 					// but we never know what the next framework version can throw at us...
-					IList cp = ca.ConstructorParameters;
+					IList cp = ca.ConstructorArguments;
 					if (cp.Count < 1)
 						continue;
 					switch (cp[0] as string)
@@ -148,7 +149,7 @@ namespace SIL.Gendarme.Rules.DebugDispose
 
 		private static EmbeddedResource GetEmbeddedResource(AssemblyDefinition ad, string resourceClassName)
 		{
-			ResourceCollection resources = ad.MainModule.Resources;
+			var resources = ad.MainModule.Resources;
 			foreach (EmbeddedResource resource in resources)
 				if (resourceClassName.Equals(resource.Name))
 					return resource;
@@ -171,7 +172,7 @@ namespace SIL.Gendarme.Rules.DebugDispose
 			if (resource == null)
 				return null;
 			
-			using (MemoryStream ms = new MemoryStream(resource.Data))
+			using (MemoryStream ms = new MemoryStream(resource.GetResourceData()))
 				using (ResourceSet resourceSet = new ResourceSet(ms))
 				{
 					return resourceSet.GetString(resourceName);
@@ -224,7 +225,7 @@ namespace SIL.Gendarme.Rules.DebugDispose
 				// ... WriteLineIf methods
 				if (mr.Name == "WriteLineIf")
 				{
-					ParameterDefinitionCollection parameters = mr.Parameters;
+					var parameters = mr.Parameters;
 					for (int i = 0; i < parameters.Count; i++)
 					{
 						if (parameters[i].ParameterType.FullName == "System.String")
