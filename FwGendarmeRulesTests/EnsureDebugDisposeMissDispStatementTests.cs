@@ -190,6 +190,9 @@ namespace SIL.Gendarme.Rules.DebugDispose
 			AssertRuleFailure<MissingStatement>("Dispose", new[] { typeof(bool) });
 		}
 
+#if DEBUG
+		// This test relies on Debug.Writeline()
+
 		/// <summary>
 		/// Tests that the rule applies and succeeds for a Dispose(bool) method that does
 		/// add a "Missing Dispose" output if called with !fDisposing
@@ -199,6 +202,7 @@ namespace SIL.Gendarme.Rules.DebugDispose
 		{
 			AssertRuleSuccess<WithStatement>("Dispose", new[] { typeof(bool) });
 		}
+#endif
 
 		/// <summary>
 		/// Tests that the rule applies and fails for a Dispose(bool) method that has a

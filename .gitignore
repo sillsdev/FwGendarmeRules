@@ -2,5 +2,9 @@
 *~
 *.userprefs
 *.pidb
+*.user
+*.suo
+*.swp
 bin/
+obj/
 test-results/
