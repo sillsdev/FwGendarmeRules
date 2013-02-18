@@ -71,11 +71,11 @@ namespace SIL.Gendarme.Rules.DebugDispose
 				return RuleResult.DoesNotApply;
 			
 			// rule only applies to type that implements IDisposable
-			if (!type.Implements("System", "IDisposable"))
+			if (!type.Implements("System.IDisposable"))
 				return RuleResult.DoesNotApply;
 
 			// rule only applies to type that doesn't derive from class that implements IDisposable
-			if (type.BaseType.Implements("System", "IDisposable"))
+			if (type.BaseType.Implements("System.IDisposable"))
 				return RuleResult.DoesNotApply;
 
 			// rule only applies if type has a Dispose(bool) method
