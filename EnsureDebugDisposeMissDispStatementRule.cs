@@ -189,7 +189,7 @@ namespace SIL.Gendarme.Rules.DebugDispose
 				return RuleResult.DoesNotApply;
 
 			// rule only applies to type that implements IDisposable
-			if (!method.DeclaringType.Implements("System.IDisposable"))
+			if (!method.DeclaringType.Implements("System", "IDisposable"))
 				return RuleResult.DoesNotApply;
 
 			// avoid looping if we're sure there's no call in the method
@@ -207,7 +207,7 @@ namespace SIL.Gendarme.Rules.DebugDispose
 			}
 
 			var parentType = method.DeclaringType.BaseType;
-			if (parentType.Implements("System.IDisposable") &&
+			if (parentType.Implements("System", "IDisposable") &&
 				!parentType.FullName.StartsWith("System.Windows.Forms"))
 				return RuleResult.DoesNotApply;
 
